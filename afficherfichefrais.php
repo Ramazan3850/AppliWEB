@@ -83,6 +83,7 @@ a:hover {
 .button.edit { background: #28a745; }
 .button.delete { background: #dc3545; }
 .button.submit { background: #17a2b8; }
+.button.view { background: #6c757d; }
 
 .button:hover {
   opacity: 0.9;
@@ -94,37 +95,58 @@ a:hover {
     <p>Connecté en tant que <strong><?= $email ?></strong> (rôle : <strong><?= $role ?></strong>)</p>
 
     <?php if (count($fiches) > 0): ?>
-        <table>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Montant</th>
+            <th>Commentaire</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        <?php foreach ($fiches as $fiche): ?>
             <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Montant</th>
-                <th>Statut</th>
-                <th>Actions</th>
+                <td><?= htmlspecialchars($fiche['id']) ?></td>
+                <td><?= htmlspecialchars($fiche['date_fiche']) ?></td>
+                <td><?= number_format((float) ($fiche['montant'] ?? 0), 2) ?> €</td>
+                <td><?= htmlspecialchars($fiche['commentaire'] ?? '—') ?></td>
+                <td>
+                    <?php
+                    $statut = $fiche['statut'] ?? '';
+                    switch ($statut) {
+                        case 'brouillon':
+                            echo '<span style="color: gray;">Brouillon</span>';
+                            break;
+                        case 'soumise':
+                            echo '<span style="color: orange;">En attente</span>';
+                            break;
+                        case 'validée':
+                            echo '<span style="color: green;">Validée</span>';
+                            break;
+                        case 'refusée':
+                            echo '<span style="color: red;">Refusée</span>';
+                            break;
+                        default:
+                            echo htmlspecialchars($statut);
+                    }
+                    ?>
+                </td>
+                <td>
+                    <a href="voir_fiche.php?id=<?= $fiche['id'] ?>" class="button view">Voir</a>
+                    <?php if (($fiche['statut'] ?? '') === 'brouillon'): ?>
+                        <a href="modifier_fiche.php?id=<?= $fiche['id'] ?>" class="button edit">Modifier</a>
+                        <a href="supprimer_fiche.php?id=<?= $fiche['id'] ?>" class="button delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
+                        <a href="soumettre_fiche.php?id=<?= $fiche['id'] ?>" class="button submit">Soumettre</a>
+                    <?php endif; ?>
+                </td>
             </tr>
-            <?php foreach ($fiches as $fiche): ?>
-                <tr>
-                    <td><?= htmlspecialchars($fiche['id']) ?></td>
-                    <td><?= date('d/m/Y', strtotime($fiche['date_fiche'])) ?></td>
-                    <td><?= htmlspecialchars($fiche['montant_total']) ?> €</td>
-                    <td><?= htmlspecialchars($fiche['statut']) ?></td>
-                    <td>
-                        <?php if ($fiche['statut'] === 'brouillon'): ?>
-                            <a href="modifier_fiche.php?id=<?= $fiche['id'] ?>" class="button edit">Modifier</a>
-                            <a href="supprimer_fiche.php?id=<?= $fiche['id'] ?>" class="button delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
-                            <a href="soumettre_fiche.php?id=<?= $fiche['id'] ?>" class="button submit">Soumettre</a>
-                        <?php else: ?>
-                            <em>Aucune action</em>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php else: ?>
-        <p>Aucune fiche de frais trouvée.</p>
-    <?php endif; ?>
+        <?php endforeach; ?>
+    </table>
+<?php else: ?>
+    <p>Aucune fiche de frais trouvée.</p>
+<?php endif; ?>
 
-    <p><a href="ajouter_fiche_frais.php">Ajouter une nouvelle fiche</a></p>
-    <p><a href="accueilvisiteur.php">Retour à l'accueil</a> | <a href="logout.php">Déconnexion</a></p>
+<p><a href="fichefrais.php">Ajouter une nouvelle fiche</a></p>
+<p><a href="accueilvisiteur.php">Retour à l'accueil</a> | <a href="logout.php">Déconnexion</a></p>
 </body>
 </html>
