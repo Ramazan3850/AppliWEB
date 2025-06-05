@@ -1,16 +1,21 @@
 <?php
 session_start();
+require_once "config.php"; // pour la connexion à la BDD
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    $valid_email = "admin@example.com";
-    $valid_password = "blackops3";
+    // Requête préparée pour récupérer l'utilisateur par email
+    $sql = "SELECT id, email, motdepasse FROM administrateurs WHERE email = :email";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($email === $valid_email && $password === $valid_password) {
-        $_SESSION['email'] = $email;
-        $_SESSION['role'] = 'admin'; 
+    if ($user && password_verify($password, $user['motdepasse'])) {
+        // Connexion réussie
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = 'admin';
         $_SESSION['id'] = $user['id'];
         header("Location: accueiladmin.php");
         exit;
@@ -19,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">

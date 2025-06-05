@@ -1,4 +1,8 @@
 <?php
+if (!isset($_SESSION['visiteur_id'])) {
+    header("Location: connexionvisiteur.php");
+    exit();
+}
 include 'config.php';
 
 $utilisateur_id = $_SESSION['utilisateur_id'];

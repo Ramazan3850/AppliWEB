@@ -5,7 +5,7 @@ require_once("config.php");
 // Vérifie que le visiteur est connecté
 if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'visiteur') {
     header("Location: connexionvisiteur.php");
-    exit;
+    exit();
 }
 
 $id_visiteur = $_SESSION['id'];
@@ -134,9 +134,7 @@ a:hover {
                 <td>
                     <a href="voir_fiche.php?id=<?= $fiche['id'] ?>" class="button view">Voir</a>
                     <?php if (($fiche['statut'] ?? '') === 'brouillon'): ?>
-                        <a href="modifier_fiche.php?id=<?= $fiche['id'] ?>" class="button edit">Modifier</a>
-                        <a href="supprimer_fiche.php?id=<?= $fiche['id'] ?>" class="button delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
-                        <a href="soumettre_fiche.php?id=<?= $fiche['id'] ?>" class="button submit">Soumettre</a>
+                        <a href="supprimer_fiche.php?id=<?= $fiche['id'] ?>" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
                     <?php endif; ?>
                 </td>
             </tr>
