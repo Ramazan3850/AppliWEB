@@ -134,7 +134,6 @@ a:hover {
                 <td>
                     <a href="voir_fiche.php?id=<?= $fiche['id'] ?>" class="button view">Voir</a>
                     <?php if (($fiche['statut'] ?? '') === 'brouillon'): ?>
-                        <a href="supprimer_fiche.php?id=<?= $fiche['id'] ?>" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
                     <?php endif; ?>
                 </td>
             </tr>

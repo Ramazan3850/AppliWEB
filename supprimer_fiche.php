@@ -2,27 +2,23 @@
 session_start();
 require_once "config.php";
 
-// Vérifie la session
-if (!isset($_SESSION['visiteur_id'])) {
-    header("Location: connexionvisiteur.php");
+// Vérifie que l’utilisateur est admin
+if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'admin') {
+    header("Location: connexionadmin.php");
     exit();
 }
 
-// Vérifie l'ID fourni
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $id_fiche = (int) $_GET['id'];
+// Récupère l’ID de la fiche
+$id_fiche = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-    // Supprime la fiche
-    $sql = "DELETE FROM fichesfrais WHERE id = :id_fiche";
+if ($id_fiche > 0) {
+    // Supprime la fiche de frais
+    $sql = "DELETE FROM fiches_frais WHERE id = :id";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['id_fiche' => $id_fiche]);
-
-    // Redirige vers l'affichage
-    header("Location: afficherfichefrais.php");
-    exit();
-} else {
-    // ID manquant ou invalide
-    header("Location: afficherfichefrais.php");
-    exit();
+    $stmt->execute(['id' => $id_fiche]);
 }
+
+// Redirige vers le dashboard
+header("Location: dashboardadmin.php");
+exit();
 ?>

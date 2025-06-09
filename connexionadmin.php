@@ -6,16 +6,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Requête préparée pour récupérer l'utilisateur par email
-    $sql = "SELECT id, email, motdepasse FROM administrateurs WHERE email = :email";
+    // Modification : utilise la table "utilisateurs"
+    $sql = "SELECT id, email, password FROM utilisateurs WHERE email = :email";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['motdepasse'])) {
+    if ($user && password_verify($password, $user['password'])) {
         // Connexion réussie
         $_SESSION['email'] = $user['email'];
-        $_SESSION['role'] = 'admin';
+        $_SESSION['role'] = 'admin'; // Tu peux adapter selon ton appli
         $_SESSION['id'] = $user['id'];
         header("Location: accueiladmin.php");
         exit;
@@ -24,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>

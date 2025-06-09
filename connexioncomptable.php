@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Requête préparée pour récupérer l'utilisateur par email
     $sql = "SELECT id, email, motdepasse FROM administrateurs WHERE email = :email";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute(['email' => $email]);
+    $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['motdepasse'])) {
