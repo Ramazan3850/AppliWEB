@@ -1,26 +1,28 @@
 <?php
 session_start();
-require_once("config.php");
+require_once "config.php";
 
-// Vérifie la connexion
+// Vérifie que l’utilisateur est connecté (peu importe le rôle)
 if (!isset($_SESSION['id'])) {
     header("Location: connexionvisiteur.php");
-    exit;
+    exit();
 }
 
-// Vérifie l'ID de la fiche
-$id_fiche = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+// Récupère l’ID de la fiche
+$id_fiche = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Récupère la fiche
-$sql = "SELECT * FROM fiches_frais WHERE id = ?";
+// Requête sans restriction
+$sql = "SELECT f.*, u.nom, u.prenom
+        FROM fiches_frais f
+        JOIN utilisateurs u ON f.utilisateur_id = u.id
+        WHERE f.id = :id";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$id_fiche]);
+$stmt->execute(['id' => $id_fiche]);
 $fiche = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Vérifie si la fiche existe et appartient au visiteur
-if (!$fiche || $fiche['utilisateur_id'] != $_SESSION['id']) {
-    echo "Fiche introuvable ou accès interdit.";
-    exit;
+if (!$fiche) {
+    echo "Fiche introuvable.";
+    exit();
 }
 ?>
 
@@ -56,5 +58,6 @@ switch ($statut) {
 </p>
 
 <a href="afficherfichefrais.php" class="retour">← Retour aux fiches</a>
+<a href="fichesavalider.php" class="retour">← Retour à la page d'avant</a>
 </body>
 </html>

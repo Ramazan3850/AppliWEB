@@ -7,15 +7,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = trim($_POST['password']);
 
     // Requête préparée pour récupérer l'utilisateur par email
-    $sql = "SELECT id, email, motdepasse FROM administrateurs WHERE email = :email";
+    $sql = "SELECT id, email, password FROM utilisateurs WHERE email = :email AND role = 'comptable'";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$email]);
+    $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['motdepasse'])) {
+    if ($user && password_verify($password, $user['password'])) {
         // Connexion réussie
         $_SESSION['email'] = $user['email'];
-        $_SESSION['role'] = 'admin';
+        $_SESSION['role'] = 'comptable';
         $_SESSION['id'] = $user['id'];
         header("Location: accueilcomptable.php");
         exit;

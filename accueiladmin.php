@@ -108,7 +108,6 @@ $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'non d�
     <ul>
         <li><a href="dashboardadmin.php">Tableau de bord admin</a></li>
         <li><a href="gestionutilisateurs.php">Gérer les utilisateurs</a></li>
-        <li><a href="toutesfichesfrais.php">Toutes les fiches de frais</a></li>
         <li><a href="parametres.php">Paramètres</a></li>
     </ul>
 </nav>

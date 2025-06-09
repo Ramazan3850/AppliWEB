@@ -107,9 +107,7 @@ $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'non d√
 
 <nav>
     <ul>
-        <li><a href="Documentation Technique gsb - Copie.pdf">Tableau de bord</a></li>
-        <li><a href="CV-parcours.pdf">Mon profil</a></li>
-        <li><a href="afficherfichefrais.php">Mes fiches de frais</a></li>
+        <li><a href="fichesavalider.php">Voir les fiches √† valider</a></li>
         <li><a href="fichefrais.html">Ajouter une fiche de frais</a></li>
     </ul>
 </nav>
