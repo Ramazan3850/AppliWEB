@@ -68,7 +68,7 @@ if (!$fiche) {
 
         <label>Statut :</label>
         <select name="statut">
-            <option value="brouillon" <?= $fiche['statut'] === 'brouillon' ? 'selected' : '' ?>>Brouillon</option>
+            <option value="en attente" <?= $fiche['statut'] === 'en attente' ? 'selected' : '' ?>>En attente</option>
             <option value="valide" <?= $fiche['statut'] === 'valide' ? 'selected' : '' ?>>Valide</option>
             <option value="refuse" <?= $fiche['statut'] === 'refuse' ? 'selected' : '' ?>>Refusé</option>
         </select>

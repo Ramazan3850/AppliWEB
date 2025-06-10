@@ -48,16 +48,25 @@ p { margin: 10px 0; }
 <?php
 $statut = $fiche['statut'] ?? '';
 switch ($statut) {
-    case 'brouillon': echo '<span style="color:gray;">Brouillon</span>'; break;
-    case 'soumise': echo '<span style="color:orange;">En attente</span>'; break;
-    case 'validée': echo '<span style="color:green;">Validée</span>'; break;
-    case 'refusée': echo '<span style="color:red;">Refusée</span>'; break;
-    default: echo 'Non renseigné';
+    case 'brouillon':
+    case 'en attente':
+    case 'soumise':
+        echo '<span style="color:gray;">En attente</span>';
+        break;
+    case 'valide':
+        echo '<span style="color:green; font-weight:bold;">Validée</span>';
+        break;
+    case 'refuse':
+        echo '<span style="color:red; font-weight:bold;">Refusée</span>';
+        break;
+    default:
+        echo 'Non renseigné';
 }
+
 ?>
 </p>
 
-<a href="afficherfichefrais.php" class="retour">← Retour aux fiches</a>
-<a href="fichesavalider.php" class="retour">← Retour à la page d'avant</a>
+<a href="afficherfichefrais.php" class="retour">← Retour pour Visiteur</a>
+<a href="fichesavalider.php" class="retour">← Retour pour Comptable</a>
 </body>
 </html>

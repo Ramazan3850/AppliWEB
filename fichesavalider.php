@@ -96,6 +96,12 @@ $fiches = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .btn-detail:hover {
         background-color: #0056b3;
     }
+
+    .retour-accueil {
+  display: inline-block;
+  margin-top: 20px;
+}
+
 </style>
 </head>
 <body>
@@ -106,7 +112,7 @@ $fiches = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <th>ID</th>
             <th>Visiteur</th>
-            <th>Description</th>
+            <th>Commentaire</th>
             <th>Montant</th>
             <th>Date</th>
             <th>Statut</th>
@@ -115,7 +121,7 @@ $fiches = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tr>
 
         <?php if (empty($fiches)): ?>
-            <tr><td colspan="9">Aucune fiche à valider pour le moment.</td></tr>
+            <tr><td colspan="8">Aucune fiche à valider pour le moment.</td></tr>
         <?php else: ?>
             <?php foreach ($fiches as $fiche): ?>
             <tr>
@@ -124,29 +130,38 @@ $fiches = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($fiche['commentaire'] ?? '') ?></td>
                 <td><?= htmlspecialchars($fiche['montant'] ?? '') ?> €</td>
                 <td><?= htmlspecialchars($fiche['date_fiche'] ?? '') ?></td>
-                <td><?= htmlspecialchars($fiche['statut'] ?? '') ?></td>
                 <td>
-    <form action="" method="POST" style="display:inline;">
-      <input type="hidden" name="id" value="<?= $fiche['id'] ?>">
-      <input type="text" name="commentaire" placeholder="Commentaire">
-      <button type="submit" name="action" value="valider" class="btn btn-valider">Valider</button>
-      <button type="submit" name="action" value="refuser" class="btn btn-refuser">Refuser</button>
-    </form>
-  </td>
-
-  <td>
-    <a href="voir_fiche.php?id=<?= $fiche['id'] ?>" class="btn btn-detail">Voir la fiche</a>
-  </td>
-                <td>
-                    <td>
+                    <?php
+                    $statut = $fiche['statut'] ?? '';
+                    if ($statut === 'brouillon') {
+                        echo '<span style="color: gray;">En attente</span>';
+                    } elseif ($statut === 'valide') {
+                        echo '<span style="color: green; font-weight: bold;">Validée</span>';
+                    } elseif ($statut === 'refuse') {
+                        echo '<span style="color: red; font-weight: bold;">Refusée</span>';
+                    } else {
+                        echo htmlspecialchars($statut);
+                    }
+                    ?>
                 </td>
+                <td>
+                    <form action="" method="POST" style="display:inline;">
+                        <input type="hidden" name="id" value="<?= $fiche['id'] ?>">
+                        <input type="text" name="commentaire" placeholder="Commentaire">
+                        <button type="submit" name="action" value="valider" class="btn btn-valider">Valider</button>
+                        <button type="submit" name="action" value="refuser" class="btn btn-refuser">Refuser</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="voir_fiche.php?id=<?= $fiche['id'] ?>" class="btn btn-detail">Voir la fiche</a>
                 </td>
             </tr>
             <?php endforeach; ?>
         <?php endif; ?>
     </table>
 
-    <br><a href="accueilcomptable.php" class="btn">← Retour Accueil Comptable</a>
-
+    <br>
+    <a href="accueilcomptable.php" class="retour-accueil">← Retour à l'accueil</a>
 </body>
+
 </html>

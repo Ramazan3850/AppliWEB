@@ -107,43 +107,40 @@ a:hover {
         <?php foreach ($fiches as $fiche): ?>
             <tr>
                 <td><?= htmlspecialchars($fiche['id']) ?></td>
-                <td><?= htmlspecialchars($fiche['date_fiche']) ?></td>
+                <td><?= htmlspecialchars($fiche['date_fiche'] ?? '') ?></td>
                 <td><?= number_format((float) ($fiche['montant'] ?? 0), 2) ?> €</td>
                 <td><?= htmlspecialchars($fiche['commentaire'] ?? '—') ?></td>
                 <td>
                     <?php
                     $statut = $fiche['statut'] ?? '';
-                    switch ($statut) {
-                        case 'brouillon':
-                            echo '<span style="color: gray;">Brouillon</span>';
-                            break;
-                        case 'soumise':
-                            echo '<span style="color: orange;">En attente</span>';
-                            break;
-                        case 'validée':
-                            echo '<span style="color: green;">Validée</span>';
-                            break;
-                        case 'refusée':
-                            echo '<span style="color: red;">Refusée</span>';
-                            break;
-                        default:
-                            echo htmlspecialchars($statut);
+                    // Remplace "brouillon" par "en attente"
+                    if ($statut === 'brouillon') {
+                        $affichage = 'en attente';
+                        $classe = 'color: gray;';
+                    } elseif ($statut === 'valide') {
+                        $affichage = 'Validée';
+                        $classe = 'color: green; font-weight: bold;';
+                    } elseif ($statut === 'refuse') {
+                        $affichage = 'Refusée';
+                        $classe = 'color: red; font-weight: bold;';
+                    } else {
+                        $affichage = htmlspecialchars($statut);
+                        $classe = 'color: gray;';
                     }
                     ?>
+                    <span style="<?= $classe ?>"><?= htmlspecialchars($affichage) ?></span>
                 </td>
                 <td>
                     <a href="voir_fiche.php?id=<?= $fiche['id'] ?>" class="button view">Voir</a>
-                    <?php if (($fiche['statut'] ?? '') === 'brouillon'): ?>
-                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </table>
-<?php else: ?>
-    <p>Aucune fiche de frais trouvée.</p>
-<?php endif; ?>
+    <?php else: ?>
+        <p>Aucune fiche de frais trouvée.</p>
+    <?php endif; ?>
 
-<p><a href="fichefrais.php">Ajouter une nouvelle fiche</a></p>
-<p><a href="accueilvisiteur.php">Retour à l'accueil</a> | <a href="logout.php">Déconnexion</a></p>
+    <p><a href="fichefrais.php">Ajouter une nouvelle fiche</a></p>
+    <p><a href="accueilvisiteur.php">Retour à l'accueil</a> | <a href="logout.php">Déconnexion</a></p>
 </body>
 </html>

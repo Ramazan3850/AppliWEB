@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_visiteur = $_SESSION['id'];
     $date_fiche = $_POST['date'];
     $commentaire = htmlspecialchars($_POST['commentaire'] ?? '');
-    $statut = "brouillon";
+    $statut = "en attente";
 
     // Calcul du montant total
     $montant_total = 0;
