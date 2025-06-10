@@ -20,6 +20,11 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $id_fiche]);
 $fiche = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$sql_details = "SELECT type_frais, quantite, montant FROM ligne_frais_forfait WHERE fiche_frais_id = :id";
+$stmt_details = $pdo->query($sql_details);
+$details = $stmt_details->fetchAll(PDO::FETCH_ASSOC);
+
+
 if (!$fiche) {
     echo "Fiche introuvable.";
     exit();
@@ -45,6 +50,14 @@ p { margin: 10px 0; }
 <p><strong>Montant :</strong> <?= number_format((float) $fiche['montant'], 2) ?> €</p>
 <p><strong>Commentaire :</strong> <?= htmlspecialchars($fiche['commentaire'] ?? '—') ?></p>
 <p><strong>Statut :</strong>
+<h2>Détails des Frais (Types de frais disponibles)</h2>
+<ul>
+    <?php foreach ($details as $detail): ?>
+        <li><strong><?= htmlspecialchars($detail['nom']) ?> :</strong> <?= number_format((float)$detail['montant'], 2) ?> €</li>
+    <?php endforeach; ?>
+</ul>
+
+
 <?php
 $statut = $fiche['statut'] ?? '';
 switch ($statut) {

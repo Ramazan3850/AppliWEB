@@ -5,7 +5,7 @@ define('DB_USER', 'root');
 define('DB_PASSWORD', '');
 
 try {
-    $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
+    $pdo = new PDO("mysql:host=localhost;dbname=gsb_database;charset=utf8", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die("Erreur de connexion à la base de données : " . $e->getMessage());
