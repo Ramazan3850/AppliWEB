@@ -1,7 +1,14 @@
 <?php
 session_start();
-require_once("config.php");
 
+// Inclut le bon fichier de config
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
+
+// Vérifie la connexion et le rôle
 if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'visiteur') {
     header("Location: connexionvisiteur.php");
     exit;
@@ -25,9 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    // Vérifie qu'il y a bien au moins un montant > 0
     if ($montant_total > 0) {
-        // Insertion dans la table fiches_frais
         $sql = "INSERT INTO fiches_frais (date_fiche, montant, commentaire, statut, utilisateur_id)
                 VALUES (?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Vérifie que l’utilisateur est connecté et a le rôle "admin"
 if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'admin') {
     header("Location: connexionadmin.php");
     exit;
@@ -14,8 +15,9 @@ if ($hour < 12) {
 } else {
     $greeting = 'Bonsoir';
 }
+
 $email = htmlspecialchars($_SESSION['email']);
-$role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'non défini';
+$role = htmlspecialchars($_SESSION['role']);
 ?>
 
 <!DOCTYPE html>

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Vérifie que l’utilisateur est connecté et a le rôle "comptable"
 if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'comptable') {
     header("Location: connexioncomptable.php");
     exit;
@@ -16,7 +17,7 @@ if ($hour < 12) {
 }
 
 $email = htmlspecialchars($_SESSION['email']);
-$role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'non défini';
+$role = htmlspecialchars($_SESSION['role']);
 ?>
 
 <!DOCTYPE html>

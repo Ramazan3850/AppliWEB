@@ -1,37 +1,40 @@
 <?php
 session_start();
-require_once "config.php"; // pour la connexion à la BDD
+
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Requête préparée pour récupérer l'utilisateur par email
-    $sql = "SELECT id, email, password FROM utilisateurs WHERE email = :email AND role = 'comptable'";
+    // Requête SQL pour récupérer l'utilisateur
+    $sql = 'SELECT * FROM utilisateurs WHERE email = :email';
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
-        // Connexion réussie
+    // Vérifie si l'utilisateur existe, le mot de passe correspond et que c'est un comptable
+    if ($user && password_verify($password, $user['password']) && $user['role'] === 'comptable') {
         $_SESSION['email'] = $user['email'];
-        $_SESSION['role'] = 'comptable';
+        $_SESSION['role'] = $user['role'];
         $_SESSION['id'] = $user['id'];
         header("Location: accueilcomptable.php");
         exit;
     } else {
-        $error_message = "Identifiants incorrects, veuillez réessayer.";
+        $error_message = "Identifiants incorrects ou rôle invalide.";
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Comptable</title>
+    <title>Connexion</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -93,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-    <form action="connexioncomptable.php" method="POST">
+     <form action="connexioncomptable.php" method="POST">
         <h1>Connexion Comptable</h1>
         <img src="gsblogo.png" alt="Image de connexion" class="login-image">
 

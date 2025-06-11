@@ -1,21 +1,24 @@
 <?php
 session_start();
+require_once 'config.php'; // Connexion à la BDD (via le bon config)
 
-$comptes = [
-    'visiteur@example.com' => ['password' => 'visiteur123', 'profil' => 'visiteur'],
-    'admin@example.com' => ['password' => 'admin123', 'profil' => 'admin'],
-    'rh@example.com' => ['password' => 'rh123', 'profil' => 'rh']
-];
-
+// Vérifie si un formulaire a été soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $mdp = $_POST['password'];
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
-    if (isset($comptes[$email]) && $comptes[$email]['password'] === $mdp) {
-        $_SESSION['email'] = $email;
-        $_SESSION['profil'] = $comptes[$email]['profil'];
+    // Prépare la requête pour chercher l'utilisateur
+    $sql = "SELECT * FROM utilisateurs WHERE email = :email LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        switch ($_SESSION['profil']) {
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['profil'] = $user['role']; // ex : admin, visiteur, rh
+
+        // Redirige selon le rôle
+        switch ($user['role']) {
             case 'visiteur':
                 header('Location: accueilvisiteur.php');
                 break;
@@ -23,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: accueiladmin.php');
                 break;
             case 'rh':
+            case 'comptable':
                 header('Location: accueilcomptable.php');
                 break;
             default:

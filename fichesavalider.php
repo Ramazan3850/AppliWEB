@@ -1,6 +1,12 @@
 <?php
 session_start();
-require_once "config.php";
+
+// Inclut le bon fichier de config (local ou distant)
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
 
 if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'comptable') {
     header("Location: connexioncomptable.php");

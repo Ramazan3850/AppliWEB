@@ -1,6 +1,12 @@
 <?php
 session_start();
-require_once("config.php");
+
+// Inclut le bon fichier de config (local ou distant)
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
 
 // Vérifie la connexion
 if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'visiteur') {
@@ -26,18 +32,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    f ($montant_total > 0) {
-    // Insertion dans la table fiches_frais
-    $sql = "INSERT INTO fiches_frais (date_fiche, montant, commentaire, statut, utilisateur_id)
-            VALUES (?, ?, ?, ?, ?)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$date_fiche, $montant_total, $commentaire, $statut, $id_visiteur]);
+    if ($montant_total > 0) {
+        // Insertion dans la table fiches_frais
+        $sql = "INSERT INTO fiches_frais (date_fiche, montant, commentaire, statut, utilisateur_id)
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$date_fiche, $montant_total, $commentaire, $statut, $id_visiteur]);
 
-    header("Location: afficherfichefrais.php");
-    exit;
-} else {
-    echo "Erreur : Vous devez remplir au moins un type de frais.";
-    exit;
-}
+        header("Location: afficherfichefrais.php");
+        exit;
+    } else {
+        echo "Erreur : Vous devez remplir au moins un type de frais.";
+        exit;
+    }
 }
 ?>

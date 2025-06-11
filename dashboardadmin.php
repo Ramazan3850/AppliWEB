@@ -1,8 +1,12 @@
 <?php
-
-
 session_start();
-require_once "config.php";
+
+// Inclut le bon fichier de config
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
 
 // Vérifie que c’est bien un admin connecté
 if (!isset($_SESSION['id']) || $_SESSION['role'] !== 'admin') {
@@ -19,11 +23,9 @@ $sql = "
 $stmt = $pdo->query($sql);
 $fiches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
 // Récupère quelques stats
 $totalUtilisateurs = $pdo->query("SELECT COUNT(*) FROM utilisateurs")->fetchColumn();
 $totalfiches_frais = $pdo->query("SELECT COUNT(*) FROM fiches_frais")->fetchColumn();
-
 ?>
 
 <!DOCTYPE html>

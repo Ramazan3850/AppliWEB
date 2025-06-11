@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['email'])) {
-    header("Location: connexion.php"); 
-    $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'non défini';
+// Vérifie que l’utilisateur est connecté et a le rôle "visiteur"
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'visiteur') {
+    header("Location: connexionvisiteur.php");
     exit;
 }
 
@@ -15,6 +15,9 @@ if ($hour < 12) {
 } else {
     $greeting = 'Bonsoir';
 }
+
+$email = htmlspecialchars($_SESSION['email']);
+$role = htmlspecialchars($_SESSION['role']);
 ?>
 
 <!DOCTYPE html>
@@ -106,7 +109,6 @@ if ($hour < 12) {
 <nav>
     <ul>
 
-        <li><a href="www.ramazan-ilkhan.fr">Mon profil</a></li>
         <li><a href="afficherfichefrais.php">Mes fiches de frais</a></li>
         <li><a href="fichefrais.php">Ajouter une fiche de frais</a></li>
     </ul>

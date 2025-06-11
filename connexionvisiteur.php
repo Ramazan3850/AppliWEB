@@ -1,31 +1,33 @@
 <?php
 session_start();
-require_once("config.php");
+
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
     // Requête SQL pour récupérer l'utilisateur
-    $sql = 'SELECT * FROM utilisateurs WHERE email = ?';
+    $sql = 'SELECT * FROM utilisateurs WHERE email = :email';
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$email]);
+    $stmt->execute(['email' => $email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
 
-    // Vérifie si l'utilisateur existe et que le mot de passe correspond
+    // Vérifie si l'utilisateur existe et que le mot de passe correspond, et que c'est un visiteur
     if ($user && password_verify($password, $user['password']) && $user['role'] === 'visiteur') {
-    $_SESSION['email'] = $user['email'];
-    $_SESSION['role'] = $user['role'];
-    $_SESSION['id'] = $user['id']; 
-    header("Location: accueilvisiteur.php");
-    exit;
-}
-
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['id'] = $user['id']; 
+        header("Location: accueilvisiteur.php");
+        exit;
     } else {
         $error_message = "Identifiants incorrects ou rôle invalide.";
     }
-
+}
 ?>
 
 <!DOCTYPE html>
@@ -113,3 +115,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 </body>
 </html>
+

@@ -1,17 +1,23 @@
 <?php
 session_start();
-require_once "config.php";
 
-// Vérifie que l’utilisateur est connecté (peu importe le rôle)
+// Inclut le bon fichier de config
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    require_once 'config_local.php';
+} else {
+    require_once 'config.php';
+}
+
+// Vérifie que l’utilisateur est connecté
 if (!isset($_SESSION['id'])) {
     header("Location: connexionvisiteur.php");
-    exit();
+    exit;
 }
 
 // Récupère l’ID de la fiche
 $id_fiche = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Requête sans restriction
+// Requête pour la fiche
 $sql = "SELECT f.*, u.nom, u.prenom
         FROM fiches_frais f
         JOIN utilisateurs u ON f.utilisateur_id = u.id
@@ -20,14 +26,15 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute(['id' => $id_fiche]);
 $fiche = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Requête pour les détails
 $sql_details = "SELECT type_frais, quantite, montant FROM ligne_frais_forfait WHERE fiche_frais_id = :id";
-$stmt_details = $pdo->query($sql_details);
+$stmt_details = $pdo->prepare($sql_details);
+$stmt_details->execute(['id' => $id_fiche]);
 $details = $stmt_details->fetchAll(PDO::FETCH_ASSOC);
-
 
 if (!$fiche) {
     echo "Fiche introuvable.";
-    exit();
+    exit;
 }
 ?>
 
