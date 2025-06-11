@@ -48,18 +48,10 @@ p { margin: 10px 0; }
 <h1>Détails de la fiche #<?= htmlspecialchars($fiche['id']) ?></h1>
 <p><strong>Date :</strong> <?= htmlspecialchars($fiche['date_fiche']) ?></p>
 <p><strong>Montant :</strong> <?= number_format((float) $fiche['montant'], 2) ?> €</p>
-<p><strong>Commentaire :</strong> <?= htmlspecialchars($fiche['commentaire'] ?? '—') ?></p>
+<p><strong>Commentaire :</strong> <?= htmlspecialchars(isset($fiche['commentaire']) ? $fiche['commentaire'] : '—') ?></p>
 <p><strong>Statut :</strong>
-
-<h2>Détails des Frais (Types de frais disponibles)</h2>
-<ul>
-    <?php foreach ($details as $detail): ?>
-        <li><strong><?= htmlspecialchars($detail['nom']) ?> :</strong> <?= number_format((float)$detail['montant'], 2) ?> €</li>
-    <?php endforeach; ?>
-</ul>
-
 <?php
-$statut = $fiche['statut'] ?? '';
+$statut = isset($fiche['statut']) ? $fiche['statut'] : '';
 switch ($statut) {
     case 'brouillon':
     case 'en attente':
@@ -75,9 +67,15 @@ switch ($statut) {
     default:
         echo 'Non renseigné';
 }
-
 ?>
 </p>
+
+<h2>Détails des Frais (Types de frais disponibles)</h2>
+<ul>
+    <?php foreach ($details as $detail): ?>
+        <li><strong><?= htmlspecialchars($detail['type_frais']) ?> :</strong> <?= number_format((float)$detail['montant'], 2) ?> € (Quantité : <?= htmlspecialchars($detail['quantite']) ?>)</li>
+    <?php endforeach; ?>
+</ul>
 
 <a href="afficherfichefrais.php" class="retour">← Retour pour Visiteur</a>
 <a href="fichesavalider.php" class="retour">← Retour pour Comptable</a>
