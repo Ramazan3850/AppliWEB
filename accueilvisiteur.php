@@ -105,7 +105,6 @@ if ($hour < 12) {
 
 <nav>
     <ul>
-        <li><a href="www.ramazan-ilkhan.fr">Mon profil</a></li>
         <li><a href="afficherfichefrais.php">Mes fiches de frais</a></li>
         <li><a href="fichefrais.php">Ajouter une fiche de frais</a></li>
     </ul>
