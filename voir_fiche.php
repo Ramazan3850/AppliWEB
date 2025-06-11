@@ -50,13 +50,13 @@ p { margin: 10px 0; }
 <p><strong>Montant :</strong> <?= number_format((float) $fiche['montant'], 2) ?> €</p>
 <p><strong>Commentaire :</strong> <?= htmlspecialchars($fiche['commentaire'] ?? '—') ?></p>
 <p><strong>Statut :</strong>
+
 <h2>Détails des Frais (Types de frais disponibles)</h2>
 <ul>
     <?php foreach ($details as $detail): ?>
         <li><strong><?= htmlspecialchars($detail['nom']) ?> :</strong> <?= number_format((float)$detail['montant'], 2) ?> €</li>
     <?php endforeach; ?>
 </ul>
-
 
 <?php
 $statut = $fiche['statut'] ?? '';
